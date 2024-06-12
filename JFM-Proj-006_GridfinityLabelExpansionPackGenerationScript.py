@@ -1,7 +1,7 @@
 # Author-Jacob Davis
 # Description-
 
-import adsk.core, adsk.fusion, adsk.cam, traceback
+import adsk.core, adsk.fusion, adsk.cam, traceback  # type: ignore
 
 
 def run(context):
