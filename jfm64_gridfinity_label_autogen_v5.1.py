@@ -23,80 +23,96 @@ import shutil
 
 DEBUG_MODE = False
 
-        
+
 # Timer class
 class TimerError(Exception):
     """A custom exception used to report errors in use of Timer class."""
-    
+
 
 class Timer:
     """create a master timer object that holds child-timers.
     Inspiration from codetiming: https://github.com/realpython/codetiming/tree/main"""
+
     class timer:
         """a child timer object."""
+
         def __init__(self, logger=None, name=None, start_time=None):
             self.logger = logger
             self.name = name
             self._start_time = start_time
             self.last = None
-            
+
         def __repr__(self) -> str:
             return f"{self.__class__.__name__}(name={self.name}, logger={self.logger}, start_time={self._start_time}, last={self.last})"
-            
-    def get_formatted_time(self, name: Optional[str]=None, format: Optional[str]=None):
+
+    def get_formatted_time(
+        self, name: Optional[str] = None, format: Optional[str] = None
+    ):
         if not format:
             format = self._time_format
         if name:
             return time.strftime(format, time.gmtime(self._timers[name].last))
         else:
             return time.strftime(format, time.gmtime(self.last))
-        
+
     def make_formatted_time(self, seconds: float, format=None):
         if not format:
             format = self._time_format
         return time.strftime(format, time.gmtime(seconds))
-    
+
     def __init__(self, logger=print, time_frmt="%m-%Y-%d %Hh:%Mm:%Ss"):
         self.logger = logger
         self._start_time = None
         self.last = None
         self._timers = {}
         self._time_format = time_frmt
-    
+
     def start(self, name=None) -> None:
         """Start the timer."""
         # if self._start_time is not None:
         #     raise TimerError("Timer is running. Use .stop() to stop it")
-        
+
         # log when timer starts
         if self.logger:
             if name:
                 self.logger("Timer {name} started...".format(name=name))
             else:
                 self.logger("Timer started...")
-                
+
         self._start_time = time.perf_counter()
         if name:
-            self._timers[name] = Timer.timer(logger=self.logger, name=name, start_time=time.perf_counter())
-        
+            self._timers[name] = Timer.timer(
+                logger=self.logger, name=name, start_time=time.perf_counter()
+            )
+
     def stop(self, name=None) -> float:
         """Stop the timer and report the elapsed time."""
         if self._start_time is None:
             raise TimerError("Timer is not running. Use .start() to start it")
-        
+
         # calculate elapsed time
         self.last = time.perf_counter() - self._start_time
-            
+
         if name:
-            self._timers[name].last = time.perf_counter() - self._timers[name]._start_time
-        
+            self._timers[name].last = (
+                time.perf_counter() - self._timers[name]._start_time
+            )
+
         # report elapsed time
         if self.logger:
             if name:
-                self.logger("Timer {name} reported elapsed time: {sec}".format(name=name, sec=self.last))
+                self.logger(
+                    "Timer {name} reported elapsed time: {sec}".format(
+                        name=name, sec=self.last
+                    )
+                )
             else:
-                self.logger("Timer reported elapsed time: {sec}".format(sec=self._timers[name].last))
-        
+                self.logger(
+                    "Timer reported elapsed time: {sec}".format(
+                        sec=self._timers[name].last
+                    )
+                )
+
         return self.last
 
 
@@ -107,7 +123,12 @@ folder_debug = "".join([folder_temp, ".debug\\"])
 
 log_folder = folder_debug if DEBUG_MODE else folder_temp
 formatter2 = logging.Formatter(fmt="%(name)s : %(levelname)s : %(message)s")
-fileHandler2 = logging.FileHandler(filename=''.join([log_folder, 'debug_', datetime.now().strftime("%d-%m-%Y-%H-%M-%S"), '.log']), mode="w")
+fileHandler2 = logging.FileHandler(
+    filename="".join(
+        [log_folder, "debug_", datetime.now().strftime("%d-%m-%Y-%H-%M-%S"), ".log"]
+    ),
+    mode="w",
+)
 fileHandler2.setLevel(logging.DEBUG)
 fileHandler2.setFormatter(fmt=formatter2)
 
@@ -138,14 +159,49 @@ _screwBoltNutWasher_maximumModul = adsk.core.IntegerSpinnerCommandInput.cast(Non
 # Bearings autogen parameters
 # Source: https://www.bearingworks.com/bearing-sizes/
 _metricBearingDefinitions = {
-    '600_series' : ['603','604','605','606','607',
-                    '608','609','623','624','625',
-                    '626','627','628','629','633',
-                    '634','635','636','637','638',
-                    '639','673','674','675','676',
-                    '677','678','683','684','685',
-                    '686','687','688','689','693',
-                    '694','695','696','697','698','699'],
+    "600_series": [
+        "603",
+        "604",
+        "605",
+        "606",
+        "607",
+        "608",
+        "609",
+        "623",
+        "624",
+        "625",
+        "626",
+        "627",
+        "628",
+        "629",
+        "633",
+        "634",
+        "635",
+        "636",
+        "637",
+        "638",
+        "639",
+        "673",
+        "674",
+        "675",
+        "676",
+        "677",
+        "678",
+        "683",
+        "684",
+        "685",
+        "686",
+        "687",
+        "688",
+        "689",
+        "693",
+        "694",
+        "695",
+        "696",
+        "697",
+        "698",
+        "699",
+    ],
 }
 
 # Global autogen parameters
@@ -155,7 +211,9 @@ _overwriteExistingFiles = adsk.core.BoolValueCommandInput.cast(None)
 _errMessage = adsk.core.TextBoxCommandInput.cast(None)
 
 processTimerStart = time.perf_counter()
-timerClassTestTimer = Timer(logger=Application.log, time_frmt="%m-%Y::%d days:%Hh:%Mm:%Ss")
+timerClassTestTimer = Timer(
+    logger=Application.log, time_frmt="%m-%Y::%d days:%Hh:%Mm:%Ss"
+)
 
 
 # Global set of event handlers to keep them referenced for the duration of the command
@@ -164,10 +222,10 @@ _handlers = []
 
 # Timer names
 class TimerNames(Enum):
-    ProcessTimer = 'process_timer'
-    AutogenerationLoopTimer = 'autogeneration_loop_timer'
-    generationStartTime = 'generation_start_time'
-    lastGenerationTime = 'last_generation_time'
+    ProcessTimer = "process_timer"
+    AutogenerationLoopTimer = "autogeneration_loop_timer"
+    generationStartTime = "generation_start_time"
+    lastGenerationTime = "last_generation_time"
 
 
 # Design parameters
@@ -215,7 +273,7 @@ class DesignAttributeId(StrEnum):
     STANDARD = "standard"
     RELOAD_ATTRIBUTES = "reloadAttributes"
     ROOT_FOLDER_NAME = "rootFolderName"
-    
+
     SBNW_LENGTH_DEPENDENT_LABEL = "lengthDependentLabel"
     SBNW_MINIMUM_LENGTH = "minimumLength"
     SBNW_MAXIMUM_LENGTH = "maximumLength"
@@ -223,16 +281,23 @@ class DesignAttributeId(StrEnum):
     SBNW_MAXIMUM_MODUL = "maximumModul"
     SBNW_MINIMUM_BIN_SPAN = "minimumBinSpan"
     SBNW_MAXIMUM_BIN_SPAN = "maximumBinSpan"
-        
+
     OVERWRITE_EXISTING_FILES = "overwriteExistingFiles"
     FOLDER_TEMP = "folderTemp"
     FOLDER_DEBUG = "folderDebug"
 
 
 # File and variant operation types and their respective messages.
-class ProgressDialogString():
+class ProgressDialogString:
     @staticmethod
-    def getUpdatedMessage(currentVariation="", currentOperation="", operationTarget="", elapsedTime="", remainingTime="", averageTime=""):
+    def getUpdatedMessage(
+        currentVariation="",
+        currentOperation="",
+        operationTarget="",
+        elapsedTime="",
+        remainingTime="",
+        averageTime="",
+    ):
         strWidth = 200
         lines = []
         lines.append("Percentage: %p %".ljust(strWidth) + "\n")
@@ -250,7 +315,7 @@ class ProgressDialogString():
             opTar=operationTarget,
             elapTime=elapsedTime,
             remainTime=remainingTime,
-            avgTime=averageTime
+            avgTime=averageTime,
         )
         return message
 
@@ -262,8 +327,6 @@ class ProgressDialogString():
         CREATING_ARCHIVE = "Creating Archive"
         ARCHIVE_EXISTS = "Archive exists : Skipping"
         # DELETING_ARCHIVE_SOURCE_FOLDER = "Deleting Archive Source Folder"
-        
-
 
 
 def on_exception():
@@ -276,7 +339,7 @@ def on_exception():
 
 
 def on_terminate(canceled=False, message=None):
-    try: 
+    try:
         global _ui, _cmdDef, _progressDialog
 
         if canceled:
@@ -304,7 +367,7 @@ def on_terminate(canceled=False, message=None):
         if _cmdDef:
             _cmdDef.deleteMe()
             logProg.debug("Command Definition successfully deleted.")
-            
+
         timerClassTestTimer.stop(name=TimerNames.ProcessTimer.value)
 
         logProg.debug("Shutting down logging...")
@@ -321,9 +384,9 @@ def run(context):
         global _progressDialog, _rootFolderName, _screwBoltNutWasher_lengthDependentLabel, _screwBoltNutWasher_minimumLength, _screwBoltNutWasher_maximumLength
         global _screwBoltNutWasher_minimumModul, _screwBoltNutWasher_maximumModul, _screwBoltNutWasher_minimumBinSpan, _screwBoltNutWasher_maximumBinSpan, _overwriteExistingFiles, _errMessage
         global _handlers, processTimerStart
-        
+
         timerClassTestTimer.start(name=TimerNames.ProcessTimer.value)
-        
+
         _app = adsk.core.Application.get()
         _ui = _app.userInterface
         _design = adsk.fusion.Design.cast(_app.activeProduct)
@@ -342,7 +405,7 @@ def run(context):
 
         # Get the existing command definition or create it if it doesn't already exist.
         _cmdDef = _ui.commandDefinitions.itemById(DesignAttributeId.GROUP_SCRIPT_NAME)
-        if not _cmdDef: 
+        if not _cmdDef:
             _cmdDef = _ui.commandDefinitions.addButtonDefinition(
                 DesignAttributeId.GROUP_SCRIPT_NAME,
                 "Autogenerate Gridfinity Label Variations",
@@ -412,13 +475,13 @@ class MyCommandCreatedHandler(adsk.core.CommandCreatedEventHandler):
             _rootFolderName = inputs.addStringValueInput(
                 CommandInputId.ROOT_FOLDER_NAME, "Root folder name", ""
             )
-            
+
             _generationAlgorithm = inputs.addDropDownCommandInput(
                 CommandInputId.GENERATION_ALGORITHM,
                 CommandInputId.GENERATION_ALGORITHM,
-                adsk.core.DropDownStyles.TextListDropDownStyle # type: ignore
+                adsk.core.DropDownStyles.TextListDropDownStyle,  # type: ignore
             )
-            
+
             _screwBoltNutWasher_lengthDependentLabel = inputs.addBoolValueInput(
                 CommandInputId.LENGTH_DEPENDENT_LABEL, "Length dependent label?", True
             )
@@ -501,7 +564,7 @@ class MyCommandCreatedHandler(adsk.core.CommandCreatedEventHandler):
             on_exception()
             return
 
-        
+
 def executeScrewBoltNutWasher(args):
     global _progressDialog, folder_temp, formatter2, fileHandler2, logProg, _app, _ui, _design, _cmdDef
     global _progressDialog, _rootFolderName, _screwBoltNutWasher_lengthDependentLabel, _screwBoltNutWasher_minimumLength, _screwBoltNutWasher_maximumLength
@@ -512,7 +575,7 @@ def executeScrewBoltNutWasher(args):
 
     # Save the current values as attributes
     attribs = _design.attributes
-    logProg.warn(''.join(['Saving current command parameters to design attributes...']))
+    logProg.warn("".join(["Saving current command parameters to design attributes..."]))
     attribs.add(
         DesignAttributeId.GROUP_SCRIPT_NAME,
         DesignAttributeId.ROOT_FOLDER_NAME,
@@ -561,44 +624,67 @@ def executeScrewBoltNutWasher(args):
 
     # Get the current values
     rootFolderName = attribs.itemByName(
-        DesignAttributeId.GROUP_SCRIPT_NAME,
-        DesignAttributeId.ROOT_FOLDER_NAME).value
-    lengthDependentLabel = True if attribs.itemByName(
-        DesignAttributeId.GROUP_SCRIPT_NAME,
-        DesignAttributeId.SBNW_LENGTH_DEPENDENT_LABEL).value == "True" else False
-    minimumLength = int(attribs.itemByName(
-        DesignAttributeId.GROUP_SCRIPT_NAME,
-        DesignAttributeId.SBNW_MINIMUM_LENGTH).value)
-    maximumLength = int(attribs.itemByName(
-        DesignAttributeId.GROUP_SCRIPT_NAME,
-        DesignAttributeId.SBNW_MAXIMUM_LENGTH).value)
-    minimumModul = int(attribs.itemByName(
-        DesignAttributeId.GROUP_SCRIPT_NAME,
-        DesignAttributeId.SBNW_MINIMUM_MODUL).value)
-    maximumModul = int(attribs.itemByName(
-        DesignAttributeId.GROUP_SCRIPT_NAME,
-        DesignAttributeId.SBNW_MAXIMUM_MODUL).value)
-    minimumBinSpan = int(attribs.itemByName(
-        DesignAttributeId.GROUP_SCRIPT_NAME,
-        DesignAttributeId.SBNW_MINIMUM_BIN_SPAN).value)
-    maximumBinSpan = int(attribs.itemByName(
-        DesignAttributeId.GROUP_SCRIPT_NAME,
-        DesignAttributeId.SBNW_MAXIMUM_BIN_SPAN).value)
-    overwriteExistingFiles = True if attribs.itemByName(
-        DesignAttributeId.GROUP_SCRIPT_NAME,
-        DesignAttributeId.OVERWRITE_EXISTING_FILES
-        ).value == "True" else False
-    
-    logProg.warn('Get operation parameter values...')
-    logProg.warn(''.join(['rootFolderName = ', str(rootFolderName)]))
-    logProg.warn(''.join(['lengthDependentLabel = ', str(lengthDependentLabel)]))
-    logProg.warn(''.join(['minimumLength = ', str(minimumLength)]))
-    logProg.warn(''.join(['maximumLength = ', str(maximumLength)]))
-    logProg.warn(''.join(['minimumModul = ', str(minimumModul)]))
-    logProg.warn(''.join(['maximumModul = ', str(maximumModul)]))
-    logProg.warn(''.join(['minimumBinSpan = ', str(minimumBinSpan)]))
-    logProg.warn(''.join(['maximumBinSpan = ', str(maximumBinSpan)]))
-    logProg.warn(''.join(['overwriteExistingFiles = ', str(overwriteExistingFiles)]))
+        DesignAttributeId.GROUP_SCRIPT_NAME, DesignAttributeId.ROOT_FOLDER_NAME
+    ).value
+    lengthDependentLabel = (
+        True
+        if attribs.itemByName(
+            DesignAttributeId.GROUP_SCRIPT_NAME,
+            DesignAttributeId.SBNW_LENGTH_DEPENDENT_LABEL,
+        ).value
+        == "True"
+        else False
+    )
+    minimumLength = int(
+        attribs.itemByName(
+            DesignAttributeId.GROUP_SCRIPT_NAME, DesignAttributeId.SBNW_MINIMUM_LENGTH
+        ).value
+    )
+    maximumLength = int(
+        attribs.itemByName(
+            DesignAttributeId.GROUP_SCRIPT_NAME, DesignAttributeId.SBNW_MAXIMUM_LENGTH
+        ).value
+    )
+    minimumModul = int(
+        attribs.itemByName(
+            DesignAttributeId.GROUP_SCRIPT_NAME, DesignAttributeId.SBNW_MINIMUM_MODUL
+        ).value
+    )
+    maximumModul = int(
+        attribs.itemByName(
+            DesignAttributeId.GROUP_SCRIPT_NAME, DesignAttributeId.SBNW_MAXIMUM_MODUL
+        ).value
+    )
+    minimumBinSpan = int(
+        attribs.itemByName(
+            DesignAttributeId.GROUP_SCRIPT_NAME, DesignAttributeId.SBNW_MINIMUM_BIN_SPAN
+        ).value
+    )
+    maximumBinSpan = int(
+        attribs.itemByName(
+            DesignAttributeId.GROUP_SCRIPT_NAME, DesignAttributeId.SBNW_MAXIMUM_BIN_SPAN
+        ).value
+    )
+    overwriteExistingFiles = (
+        True
+        if attribs.itemByName(
+            DesignAttributeId.GROUP_SCRIPT_NAME,
+            DesignAttributeId.OVERWRITE_EXISTING_FILES,
+        ).value
+        == "True"
+        else False
+    )
+
+    logProg.warn("Get operation parameter values...")
+    logProg.warn("".join(["rootFolderName = ", str(rootFolderName)]))
+    logProg.warn("".join(["lengthDependentLabel = ", str(lengthDependentLabel)]))
+    logProg.warn("".join(["minimumLength = ", str(minimumLength)]))
+    logProg.warn("".join(["maximumLength = ", str(maximumLength)]))
+    logProg.warn("".join(["minimumModul = ", str(minimumModul)]))
+    logProg.warn("".join(["maximumModul = ", str(maximumModul)]))
+    logProg.warn("".join(["minimumBinSpan = ", str(minimumBinSpan)]))
+    logProg.warn("".join(["maximumBinSpan = ", str(maximumBinSpan)]))
+    logProg.warn("".join(["overwriteExistingFiles = ", str(overwriteExistingFiles)]))
 
     # Create temp and debug folders if necessary
     if not os.path.isdir(folder_temp):
@@ -665,7 +751,7 @@ def executeScrewBoltNutWasher(args):
     _progressDialog.isCancelButtonShown = True
     _progressDialog.show(
         "Autogeneration in progress...",
-        ProgressDialogString.getUpdatedMessage(), 
+        ProgressDialogString.getUpdatedMessage(),
         0,
         totalSteps,
         0,
@@ -682,9 +768,9 @@ def executeScrewBoltNutWasher(args):
     remainingSteps = _progressDialog.maximumValue
     estimatedRemainingTime = 0.0
     count = 1
-    
+
     if lengthDependentLabel:
-        
+
         for M in range(minimumModul, maximumModul + 1):
             # Begin the loop for Bin Span
             for bin_span in range(minimumBinSpan, maximumBinSpan + 1):
@@ -707,12 +793,8 @@ def executeScrewBoltNutWasher(args):
                         # Construct the modul directory
                         new_folder_m = "".join([folder_root, "\\M", str(M)])
                         logProg.info("".join(["new_folder_m = ", new_folder_m]))
-                        logProg.info(
-                            "".join(["Making directory '", new_folder_m, "'"])
-                        )
-                        if overwriteExistingFiles or not os.path.isdir(
-                            new_folder_m
-                        ):
+                        logProg.info("".join(["Making directory '", new_folder_m, "'"]))
+                        if overwriteExistingFiles or not os.path.isdir(new_folder_m):
                             os.makedirs(new_folder_m, exist_ok=True)
                             logProg.info("...DONE")
                         else:
@@ -722,17 +804,11 @@ def executeScrewBoltNutWasher(args):
                         new_folder_span = "".join(
                             [new_folder_m, "\\", str(bin_span), "_span"]
                         )
+                        logProg.info("".join(["new_folder_span = ", new_folder_span]))
                         logProg.info(
-                            "".join(["new_folder_span = ", new_folder_span])
+                            "".join(["Making directory '", new_folder_span, "'"])
                         )
-                        logProg.info(
-                            "".join(
-                                ["Making directory '", new_folder_span, "'"]
-                            )
-                        )
-                        if overwriteExistingFiles or not os.path.isdir(
-                            new_folder_span
-                        ):
+                        if overwriteExistingFiles or not os.path.isdir(new_folder_span):
                             os.makedirs(new_folder_span, exist_ok=True)
                             logProg.info("...DONE")
                         else:
@@ -749,26 +825,42 @@ def executeScrewBoltNutWasher(args):
                         if not overwriteExistingFiles and os.path.isfile(filename):
                             logProg.info("...File already exists. Skipping.")
                         else:
-                            timerClassTestTimer.start(name=TimerNames.lastGenerationTime.value)
+                            timerClassTestTimer.start(
+                                name=TimerNames.lastGenerationTime.value
+                            )
                             _progressDialog.message = ProgressDialogString.getUpdatedMessage(
                                 currentVariation=variant_name,
                                 currentOperation=ProgressDialogString.OperationType.CREATE_VARIANT,
                                 operationTarget=filename,
-                                elapsedTime=str((timerClassTestTimer.make_formatted_time(time.perf_counter() - generationStartTime)).split('::')[1]),
-                                remainingTime=str((timerClassTestTimer.make_formatted_time(seconds=estimatedRemainingTime)).split('::')[1]),
-                                averageTime=str((timerClassTestTimer.make_formatted_time(averageGenerationTime)).split('::')[1])
+                                elapsedTime=str(
+                                    (
+                                        timerClassTestTimer.make_formatted_time(
+                                            time.perf_counter() - generationStartTime
+                                        )
+                                    ).split("::")[1]
+                                ),
+                                remainingTime=str(
+                                    (
+                                        timerClassTestTimer.make_formatted_time(
+                                            seconds=estimatedRemainingTime
+                                        )
+                                    ).split("::")[1]
+                                ),
+                                averageTime=str(
+                                    (
+                                        timerClassTestTimer.make_formatted_time(
+                                            averageGenerationTime
+                                        )
+                                    ).split("::")[1]
+                                ),
                             )
 
                             # Create the variant
-                            logProg.warn(''.join(['Creating variant: ', variant_name]))
-                            logProg.info(
-                                "Setting Fusion 360 document parameters...."
-                            )
+                            logProg.warn("".join(["Creating variant: ", variant_name]))
+                            logProg.info("Setting Fusion 360 document parameters....")
                             param_bin_span.parameter.expression = str(bin_span)
                             param_m.parameter.expression = str(M)
-                            param_label_text.parameter.comment = "".join(
-                                ["M", str(M)]
-                            )
+                            param_label_text.parameter.comment = "".join(["M", str(M)])
                             param_bolt_length.parameter.expression = str(length)
                             param_label_text.parameter.comment = "".join(
                                 [
@@ -784,9 +876,7 @@ def executeScrewBoltNutWasher(args):
                             )
 
                             logProg.info("Firing custom events...")
-                            _app.fireCustomEvent(
-                                "thomasa88_ParametricText_Ext_Update"
-                            )
+                            _app.fireCustomEvent("thomasa88_ParametricText_Ext_Update")
                             adsk.doEvents()
                             adsk.doEvents()
                             logProg.info("...DONE")
@@ -802,9 +892,7 @@ def executeScrewBoltNutWasher(args):
 
                             # Save the file as an stl
                             logProg.info(
-                                "".join(
-                                    ["Exporting variant '", variant_name, "'..."]
-                                )
+                                "".join(["Exporting variant '", variant_name, "'..."])
                             )
                             exportMgr = adsk.fusion.ExportManager.cast(
                                 _design.exportManager
@@ -842,33 +930,60 @@ def executeScrewBoltNutWasher(args):
                                 )
                                 logProg.info("...DONE")
                             count += 1
-                            lastGenerationTime = timerClassTestTimer.stop(name=TimerNames.lastGenerationTime.value)
+                            lastGenerationTime = timerClassTestTimer.stop(
+                                name=TimerNames.lastGenerationTime.value
+                            )
                             strFrmt = "%m-%Y%d days::%Hh:%Mm:%Ss"
-                            message = ''.join(['Current generation step: ', str(count),
-                                                '\nRemaining Steps: ', str(remainingSteps),
-                                                '\nLast estimated time remaining: ', str(timerClassTestTimer.make_formatted_time(estimatedRemainingTime).split('::')[1]), ' seconds.',
-                                                '\nLast generation time: ', str(timerClassTestTimer.make_formatted_time(lastGenerationTime).split('::')[1]), ' seconds.',
-                                                '\nAverage generation time: ', str(timerClassTestTimer.make_formatted_time(averageGenerationTime).split('::')[1]), ' seconds.'])
-                            for m in message.split('\n'):
+                            message = "".join(
+                                [
+                                    "Current generation step: ",
+                                    str(count),
+                                    "\nRemaining Steps: ",
+                                    str(remainingSteps),
+                                    "\nLast estimated time remaining: ",
+                                    str(
+                                        timerClassTestTimer.make_formatted_time(
+                                            estimatedRemainingTime
+                                        ).split("::")[1]
+                                    ),
+                                    " seconds.",
+                                    "\nLast generation time: ",
+                                    str(
+                                        timerClassTestTimer.make_formatted_time(
+                                            lastGenerationTime
+                                        ).split("::")[1]
+                                    ),
+                                    " seconds.",
+                                    "\nAverage generation time: ",
+                                    str(
+                                        timerClassTestTimer.make_formatted_time(
+                                            averageGenerationTime
+                                        ).split("::")[1]
+                                    ),
+                                    " seconds.",
+                                ]
+                            )
+                            for m in message.split("\n"):
                                 logProg.warning(m)
-                            
-                            
-                                
+
                     _progressDialog.progressValue += 1
-                    
+
                     # lastGenerationTime = time.perf_counter() - generationStartTime
                     # averageGenerationTime = lastGenerationTime / count
-                    
-                    averageGenerationTime = ((count - 1) * averageGenerationTime + lastGenerationTime) / count
-                    remainingSteps = _progressDialog.maximumValue - _progressDialog.progressValue
+
+                    averageGenerationTime = (
+                        (count - 1) * averageGenerationTime + lastGenerationTime
+                    ) / count
+                    remainingSteps = (
+                        _progressDialog.maximumValue - _progressDialog.progressValue
+                    )
                     estimatedRemainingTime = remainingSteps * averageGenerationTime
-                    
-            
+
             # Make archive after bin-span for loop, archive everything in each modul folder
             _progressDialog.message = ProgressDialogString.getUpdatedMessage(
-                currentVariation='',
+                currentVariation="",
                 currentOperation=ProgressDialogString.OperationType.CREATING_ARCHIVE,
-                operationTarget=new_folder_m
+                operationTarget=new_folder_m,
             )
             logProg.info("".join(["Creating archive '", new_folder_m, "'..."]))
             if os.path.exists("".join([new_folder_m, ".zip"])):
@@ -876,7 +991,7 @@ def executeScrewBoltNutWasher(args):
             else:
                 shutil.make_archive(new_folder_m, "zip", new_folder_m)
                 logProg.info("...DONE")
-        
+
     else:
 
         for M in range(minimumModul, maximumModul + 1):
@@ -890,9 +1005,7 @@ def executeScrewBoltNutWasher(args):
 
                     if length % 2 == 0 or length % 5 == 0:
                         # Create the variant_name
-                        variant_name = "".join(
-                            [str(bin_span), "_span_M", str(M)]
-                        )
+                        variant_name = "".join([str(bin_span), "_span_M", str(M)])
 
                         logProg.info(
                             "".join(["Creating variant '", variant_name, "'..."])
@@ -901,20 +1014,14 @@ def executeScrewBoltNutWasher(args):
                         # Construct the modul directory
                         new_folder_m = "".join([folder_root, "\\M", str(M)])
                         logProg.info("".join(["new_folder_m = ", new_folder_m]))
-                        logProg.info(
-                            "".join(["Making directory '", new_folder_m, "'"])
-                        )
-                        if overwriteExistingFiles or not os.path.isdir(
-                            new_folder_m
-                        ):
+                        logProg.info("".join(["Making directory '", new_folder_m, "'"]))
+                        if overwriteExistingFiles or not os.path.isdir(new_folder_m):
                             os.makedirs(new_folder_m, exist_ok=True)
                             logProg.info("...DONE")
                         else:
                             logProg.info("...Directory already exists.")
 
-                        filename = "".join(
-                            [new_folder_m, "\\", variant_name, ".stl"]
-                        )
+                        filename = "".join([new_folder_m, "\\", variant_name, ".stl"])
 
                         logProg.info("".join(["Filename='", filename, "'"]))
                         logProg.info("Checking if file already exists...")
@@ -922,26 +1029,42 @@ def executeScrewBoltNutWasher(args):
                         if not overwriteExistingFiles and os.path.isfile(filename):
                             logProg.info("...File already exists. Skipping.")
                         else:
-                            timerClassTestTimer.start(name=TimerNames.lastGenerationTime.value)
+                            timerClassTestTimer.start(
+                                name=TimerNames.lastGenerationTime.value
+                            )
                             _progressDialog.message = ProgressDialogString.getUpdatedMessage(
                                 currentVariation=variant_name,
                                 currentOperation=ProgressDialogString.OperationType.CREATE_VARIANT,
                                 operationTarget=filename,
-                                elapsedTime=str((timerClassTestTimer.make_formatted_time(time.perf_counter() - generationStartTime)).split('::')[1]),
-                                remainingTime=str((timerClassTestTimer.make_formatted_time(seconds=estimatedRemainingTime)).split('::')[1]),
-                                averageTime=str((timerClassTestTimer.make_formatted_time(averageGenerationTime)).split('::')[1])
+                                elapsedTime=str(
+                                    (
+                                        timerClassTestTimer.make_formatted_time(
+                                            time.perf_counter() - generationStartTime
+                                        )
+                                    ).split("::")[1]
+                                ),
+                                remainingTime=str(
+                                    (
+                                        timerClassTestTimer.make_formatted_time(
+                                            seconds=estimatedRemainingTime
+                                        )
+                                    ).split("::")[1]
+                                ),
+                                averageTime=str(
+                                    (
+                                        timerClassTestTimer.make_formatted_time(
+                                            averageGenerationTime
+                                        )
+                                    ).split("::")[1]
+                                ),
                             )
 
                             # Create the variant
-                            logProg.warn(''.join(['Creating variant: ', variant_name]))
-                            logProg.info(
-                                "Setting Fusion 360 document parameters...."
-                            )
+                            logProg.warn("".join(["Creating variant: ", variant_name]))
+                            logProg.info("Setting Fusion 360 document parameters....")
                             param_bin_span.parameter.expression = str(bin_span)
                             param_m.parameter.expression = str(M)
-                            param_label_text.parameter.comment = "".join(
-                                ["M", str(M)]
-                            )
+                            param_label_text.parameter.comment = "".join(["M", str(M)])
                             logProg.info("...DONE")
                             logProg.debug(
                                 "param_text_height.value prior to firing custom event: "
@@ -949,9 +1072,7 @@ def executeScrewBoltNutWasher(args):
                             )
 
                             logProg.info("Firing custom events...")
-                            _app.fireCustomEvent(
-                                "thomasa88_ParametricText_Ext_Update"
-                            )
+                            _app.fireCustomEvent("thomasa88_ParametricText_Ext_Update")
                             adsk.doEvents()
                             adsk.doEvents()
                             logProg.info("...DONE")
@@ -967,9 +1088,7 @@ def executeScrewBoltNutWasher(args):
 
                             # Save the file as an stl
                             logProg.info(
-                                "".join(
-                                    ["Exporting variant '", variant_name, "'..."]
-                                )
+                                "".join(["Exporting variant '", variant_name, "'..."])
                             )
                             exportMgr = adsk.fusion.ExportManager.cast(
                                 _design.exportManager
@@ -1007,33 +1126,61 @@ def executeScrewBoltNutWasher(args):
                                 )
                                 logProg.info("...DONE")
                             count += 1
-                            lastGenerationTime = timerClassTestTimer.stop(name=TimerNames.lastGenerationTime.value)
+                            lastGenerationTime = timerClassTestTimer.stop(
+                                name=TimerNames.lastGenerationTime.value
+                            )
                             strFrmt = "%m-%Y%d days::%Hh:%Mm:%Ss"
-                            message = ''.join(['Current generation step: ', str(count),
-                                                '\nRemaining Steps: ', str(remainingSteps),
-                                                '\nLast estimated time remaining: ', str(timerClassTestTimer.make_formatted_time(estimatedRemainingTime).split('::')[1]), ' seconds.',
-                                                '\nLast generation time: ', str(timerClassTestTimer.make_formatted_time(lastGenerationTime).split('::')[1]), ' seconds.',
-                                                '\nAverage generation time: ', str(timerClassTestTimer.make_formatted_time(averageGenerationTime).split('::')[1]), ' seconds.'])
-                            for m in message.split('\n'):
+                            message = "".join(
+                                [
+                                    "Current generation step: ",
+                                    str(count),
+                                    "\nRemaining Steps: ",
+                                    str(remainingSteps),
+                                    "\nLast estimated time remaining: ",
+                                    str(
+                                        timerClassTestTimer.make_formatted_time(
+                                            estimatedRemainingTime
+                                        ).split("::")[1]
+                                    ),
+                                    " seconds.",
+                                    "\nLast generation time: ",
+                                    str(
+                                        timerClassTestTimer.make_formatted_time(
+                                            lastGenerationTime
+                                        ).split("::")[1]
+                                    ),
+                                    " seconds.",
+                                    "\nAverage generation time: ",
+                                    str(
+                                        timerClassTestTimer.make_formatted_time(
+                                            averageGenerationTime
+                                        ).split("::")[1]
+                                    ),
+                                    " seconds.",
+                                ]
+                            )
+                            for m in message.split("\n"):
                                 logProg.warning(m)
-                            
-                            
-                                
+
                     _progressDialog.progressValue += 1
-                    
+
                     # lastGenerationTime = time.perf_counter() - generationStartTime
                     # averageGenerationTime = lastGenerationTime / count
-                    
-                    averageGenerationTime = ((count - 1) * averageGenerationTime + lastGenerationTime) / count
-                    remainingSteps = _progressDialog.maximumValue - _progressDialog.progressValue
+
+                    averageGenerationTime = (
+                        (count - 1) * averageGenerationTime + lastGenerationTime
+                    ) / count
+                    remainingSteps = (
+                        _progressDialog.maximumValue - _progressDialog.progressValue
+                    )
                     estimatedRemainingTime = remainingSteps * averageGenerationTime
 
     if not lengthDependentLabel:
         # Make archive after mopdul for loop, archive everything into one folder
         _progressDialog.message = ProgressDialogString.getUpdatedMessage(
-            currentVariation='',
+            currentVariation="",
             currentOperation=ProgressDialogString.OperationType.CREATING_ARCHIVE,
-            operationTarget=folder_root
+            operationTarget=folder_root,
         )
         logProg.info("".join(["Creating archive '", folder_root, "'..."]))
         shutil.make_archive(folder_root, "zip", folder_root)
@@ -1041,11 +1188,33 @@ def executeScrewBoltNutWasher(args):
 
     logProg.info("JOB FINISHED. TERMINATING...")
     totalProcessTime = time.perf_counter() - generationStartTime
-    message = ''.join(["Finished after ", str(timerClassTestTimer.make_formatted_time(totalProcessTime).split('::')[1]),
-                        '\nLast estimated time remaining: ', str(timerClassTestTimer.make_formatted_time(estimatedRemainingTime).split('::')[1]),
-                        '\nLast generation time: ', str(timerClassTestTimer.make_formatted_time(lastGenerationTime).split('::')[1]),
-                        '\nAverage generation time: ', str(timerClassTestTimer.make_formatted_time(averageGenerationTime).split('::')[1])])
-    for m in message.split('\n'):
+    message = "".join(
+        [
+            "Finished after ",
+            str(
+                timerClassTestTimer.make_formatted_time(totalProcessTime).split("::")[1]
+            ),
+            "\nLast estimated time remaining: ",
+            str(
+                timerClassTestTimer.make_formatted_time(estimatedRemainingTime).split(
+                    "::"
+                )[1]
+            ),
+            "\nLast generation time: ",
+            str(
+                timerClassTestTimer.make_formatted_time(lastGenerationTime).split("::")[
+                    1
+                ]
+            ),
+            "\nAverage generation time: ",
+            str(
+                timerClassTestTimer.make_formatted_time(averageGenerationTime).split(
+                    "::"
+                )[1]
+            ),
+        ]
+    )
+    for m in message.split("\n"):
         logProg.warning(m)
     on_terminate(canceled=False, message=message)
 
@@ -1099,7 +1268,10 @@ class MyCommandValidateInputsHandler(adsk.core.ValidateInputsEventHandler):
 
             _errMessage.text = ""
 
-            if _screwBoltNutWasher_minimumLength.value >= _screwBoltNutWasher_maximumLength.value:
+            if (
+                _screwBoltNutWasher_minimumLength.value
+                >= _screwBoltNutWasher_maximumLength.value
+            ):
                 _errMessage.text = (
                     CommandInputId.MINIMUM_LENGTH
                     + " must be less than "
@@ -1107,7 +1279,10 @@ class MyCommandValidateInputsHandler(adsk.core.ValidateInputsEventHandler):
                 )
                 eventArgs.areInputsValid = False
                 return
-            if _screwBoltNutWasher_minimumModul.value >= _screwBoltNutWasher_maximumModul.value:
+            if (
+                _screwBoltNutWasher_minimumModul.value
+                >= _screwBoltNutWasher_maximumModul.value
+            ):
                 _errMessage.text = (
                     CommandInputId.MINIMUM_MODUL
                     + " must be less than "
@@ -1115,7 +1290,10 @@ class MyCommandValidateInputsHandler(adsk.core.ValidateInputsEventHandler):
                 )
                 eventArgs.areInputsValid = False
                 return
-            if _screwBoltNutWasher_minimumBinSpan.value >= _screwBoltNutWasher_maximumBinSpan.value:
+            if (
+                _screwBoltNutWasher_minimumBinSpan.value
+                >= _screwBoltNutWasher_maximumBinSpan.value
+            ):
                 _errMessage.text = (
                     CommandInputId.MINIMUM_BIN_SPAN
                     + " must be less than "
