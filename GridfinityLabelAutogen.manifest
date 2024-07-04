@@ -7,7 +7,7 @@
 		"":	""
 	},
 	"version":	"",
-	"runOnStartup":	false,
+	"runOnStartup":	true,
 	"supportedOS":	"windows|mac",
 	"editEnabled":	true
 }
