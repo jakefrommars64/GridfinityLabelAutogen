@@ -1,7 +1,18 @@
 {
-name : [type,default],
-picto_inner_diameter : ["double",0.0],
-picto_outer_diameter : ["double",0.0],
-picto_inner_length : ["double",0.0],
-picto_outer_length : ["double",0.0]
+    "picto_inner_diameter": [
+        "double",
+        0.0
+    ],
+    "picto_outer_diameter": [
+        "double",
+        0.0
+    ],
+    "picto_inner_length": [
+        "double",
+        0.0
+    ],
+    "picto_outer_length": [
+        "double",
+        0.0
+    ]
 }
