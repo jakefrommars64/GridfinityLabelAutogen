@@ -83,8 +83,12 @@ This add-in should be installed in
 
 ## Definition List
 
-User parameter
-: > Parameters defined in an `.f3d` document. Easily accessed via the API and allows creating parametric designs.
-
 Autogenerator Parameter, Autogen Parameter
 : > Parameters defined by inputs to the `GridfinityLabelAutogen` add-in via `command inputs`.
+
+Gridfinity Grid Unit (GGU)
+: > `Gridfinity Grid Units`, or `GGU`, are a measure of length using the square grid of Gridfinity as its base unit.
+One `GGU` is equal to one Gridfinity square.
+
+User parameter
+: > Parameters defined in an `.f3d` document. Easily accessed via the API and allows creating parametric designs.
