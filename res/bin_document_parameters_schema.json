@@ -1,0 +1,57 @@
+{
+    "schema": {
+        "gla_id": {
+            "document_parameter_name": "gla_id",
+            "type": "string",
+            "accepted-values": [
+                "gridfinity-label-autogen-bin"
+            ]
+        },
+        "width_x": {
+            "document_parameter_name": "Width_X",
+            "type": "double",
+            "default": 1.0,
+            "unit": "unitless"
+        },
+        "width_y": {
+            "document_parameter_name": "Width_Y",
+            "type": "double",
+            "default": 1.0,
+            "unit": "unitless"
+        },
+        "height": {
+            "document_parameter_name": "Height",
+            "type": "double",
+            "default": 1.0,
+            "unit": "unitless"
+        },
+        "scoop_curve_radius": {
+            "document_parameter_name": "ScoopCurveRadius",
+            "type": "double",
+            "default": 10.0,
+            "unit": "mm"
+        },
+        "divisions": {
+            "document_parameter_name": "Divisions",
+            "type": "double",
+            "default": 0.0,
+            "unit": "unitless"
+        },
+        "has_label": {
+            "document_parameter_name": "HasLabel",
+            "type": "boolean",
+            "default": true,
+            "unit": "unitless",
+            "accepted-values": [
+                false,
+                true
+            ]
+        },
+        "label_width": {
+            "document_parameter_name": "LabelWidth",
+            "type": "double",
+            "default": 12.0,
+            "unit": "mm"
+        }
+    }
+}

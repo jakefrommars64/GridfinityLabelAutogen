@@ -8,9 +8,9 @@ ui = app.userInterface
 
 
 # TODO *** Specify the command identity information. ***
-CMD_ID = f"{config.COMPANY_NAME}_{config.ADDIN_NAME}_cmdDialog"
-CMD_NAME = "Command Dialog Sample"
-CMD_Description = "A Fusion Add-in Command with a dialog"
+CMD_ID = f"{config.COMPANY_NAME}_{config.ADDIN_NAME}_autogenLabel"
+CMD_NAME = "Autogenerate Label"
+CMD_Description = "Autogenerate labels using parameters input by the user."
 futil.log(CMD_ID)
 
 # Specify that the command will be promoted to the panel.
@@ -21,8 +21,10 @@ IS_PROMOTED = True
 # command it will be inserted beside. Not providing the command to position it
 # will insert it at the end.
 WORKSPACE_ID = "FusionSolidEnvironment"
-PANEL_ID = "SolidScriptsAddinsPanel"
-COMMAND_BESIDE_ID = "ScriptsManagerCommand"
+TAB_ID = "SolidTab"
+PANEL_BESIDE_ID = "SolidModifyPanel"
+PANEL_ID = "AutogeneratePanel"
+COMMAND_BESIDE_ID = ""
 
 # Resource location for command icons, here we assume a sub folder in this directory named "resources".
 ICON_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), "resources", "")
@@ -46,8 +48,13 @@ def start():
     # Get the target workspace the button will be created in.
     workspace = ui.workspaces.itemById(WORKSPACE_ID)
 
+    # Get the tab the button will be created in.
+    tab = workspace.toolbarTabs.itemById(TAB_ID)
+
     # Get the panel the button will be created in.
-    panel = workspace.toolbarPanels.itemById(PANEL_ID)
+    panel = tab.toolbarPanels.itemById(PANEL_ID)
+    if not panel:
+        panel = tab.toolbarPanels.add(PANEL_ID, "Autogenerate", PANEL_BESIDE_ID, False)
 
     # Create the button command control in the UI after the specified existing command.
     control = panel.controls.addCommand(cmd_def, COMMAND_BESIDE_ID, False)
@@ -83,6 +90,7 @@ def command_created(args: adsk.core.CommandCreatedEventArgs):
     inputs = args.command.commandInputs
 
     # TODO Define the dialog for your command by adding different inputs to the command.
+    # TODO Define JSON schema and schema loader for commandInputs
 
     # Create a simple text box input.
     inputs.addTextBoxCommandInput("text_box", "Some Text", "Enter some text.", 1, False)

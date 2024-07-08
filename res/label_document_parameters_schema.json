@@ -1,34 +1,47 @@
 {
     "schema": {
+        "gla_id": {
+            "document_parameter_name": "gla_id",
+            "type": "string",
+            "accepted_values": [
+                "gridfinity-label-autogen"
+            ]
+        },
         "picto_inner_diameter": {
+            "document_parameter_name": "picto_inner_diameter",
             "type": "double",
             "default": 2.0,
             "unit": "mm"
         },
         "picto_outer_diameter": {
+            "document_parameter_name": "picto_outer_diameter",
             "type": "double",
             "default": 4.0,
             "unit": "mm"
         },
         "picto_inner_length": {
+            "document_parameter_name": "picto_inner_length",
             "type": "double",
             "default": 4.0,
             "unit": "mm"
         },
         "picto_outer_length": {
+            "document_parameter_name": "picto_outer_length",
             "type": "double",
             "default": 4.0,
             "unit": "mm"
         },
         "bin_span": {
+            "document_parameter_name": "bin_span",
             "type": "double",
             "default": 1.0,
-            "unit": "ggu"
+            "unit": "unitless"
         },
         "label_text": {
+            "document_parameter_name": "label_text",
             "type": "string",
             "default": "[label_text]",
-            "unit": "null"
+            "unit": "unitless"
         }
     }
 }
