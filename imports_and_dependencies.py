@@ -17,5 +17,4 @@ from jsonSchema import *
 
 from . import commands
 from .lib import fusionAddInUtils as futil
-import os
 from . import R
