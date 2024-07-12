@@ -1,6 +1,6 @@
 # Assuming you have not changed the general structure of the template no modification is needed in this file.
-from . import commands
-from .lib import fusionAddInUtils as futil
+from .imports_and_dependencies import *
+from jsonschema import *
 
 
 def run(context):
@@ -9,7 +9,7 @@ def run(context):
         commands.start()
 
     except:
-        futil.handle_error('run')
+        futil.handle_error("run")
 
 
 def stop(context):
@@ -21,4 +21,4 @@ def stop(context):
         commands.stop()
 
     except:
-        futil.handle_error('stop')
+        futil.handle_error("stop")

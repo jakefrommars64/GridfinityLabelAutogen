@@ -9,7 +9,7 @@ ui = app.userInterface
 
 # TODO *** Specify the command identity information. ***
 CMD_ID = f"{config.COMPANY_NAME}_{config.ADDIN_NAME}_autogenLabel"
-CMD_NAME = "Autogenerate Label"
+CMD_NAME = "Autogenerate Labels"
 CMD_Description = "Autogenerate labels using parameters input by the user."
 futil.log(CMD_ID)
 
