@@ -1,7 +1,10 @@
+from ... import design_parameters
 import adsk.core
+import adsk.fusion
 import os
-from ...lib import fusionAddInUtils as futil
-from ... import config
+from ....lib import fusionAddInUtils as futil
+from .... import config
+from .... import R
 
 app = adsk.core.Application.get()
 ui = app.userInterface
@@ -37,9 +40,11 @@ local_handlers = []
 # Executed when add-in is run.
 def start():
     # Create a command Definition.
-    cmd_def = ui.commandDefinitions.addButtonDefinition(
-        CMD_ID, CMD_NAME, CMD_Description, ICON_FOLDER
-    )
+    if not ui.commandDefinitions.itemById(CMD_ID):
+        cmd_def = ui.commandDefinitions.addButtonDefinition(
+            CMD_ID, CMD_NAME, CMD_Description, ICON_FOLDER
+        )
+    cmd_def = ui.commandDefinitions.itemById(CMD_ID)
 
     # Define an event handler for the command created event. It will be called when the button is clicked.
     futil.add_handler(cmd_def.commandCreated, command_created)
@@ -80,11 +85,38 @@ def stop():
         command_definition.deleteMe()
 
 
+def get_and_validate_design_parameters():
+    """Get Fusion 360 design parameters,
+    check if it has a parameter named `gla-id`,
+    validate design parameters against schema.
+    """
+
+    futil.log(f"Getting document design parameters...")
+    _app = adsk.core.Application.get()
+    _design = adsk.fusion.Design.cast(_app.activeProduct)
+
+    design_params = design_parameters.DesignParameters(_design)
+
+    # check if design has parameter named `gla_id`
+    # if not then display message to open a GLA document.
+    # Otherwise Continue and valiudate design parameters.
+    if not design_params.parameters.get("gla_id"):
+        ui.messageBox("Please open an official GLA Fusion 360 Document.")
+        return
+
+    futil.log(f"Loading label design parameters schema...")
+    dp_schema = design_parameters.JSONSchema(R.LABEL_DOCUMENT_PARAMETERS_SCHEMA)
+    dp_schema.load()
+    val_props = dp_schema.validate(design_params.parameters)
+
+
 # Function that is called when a user clicks the corresponding button in the UI.
 # This defines the contents of the command dialog and connects to the command related events.
 def command_created(args: adsk.core.CommandCreatedEventArgs):
     # General logging for debug.
     futil.log(f"{CMD_NAME} Command Created Event")
+
+    get_and_validate_design_parameters()
 
     # https://help.autodesk.com/view/fusion360/ENU/?contextId=CommandInputs
     inputs = args.command.commandInputs
