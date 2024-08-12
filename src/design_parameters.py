@@ -29,17 +29,17 @@ class JSONSchema:
         self.description = json_obj["description"]
         self.required = json_obj["required"]
 
-        futil.log(f"$schema: {self.schema}")
-        futil.log(f"$id: {self.id}")
-        futil.log(f"title: {self.title}")
-        futil.log(f"description: {self.description}")
-        futil.log(f"required: {self.required}")
+        # futil.log(f"$schema: {self.schema}")
+        # futil.log(f"$id: {self.id}")
+        # futil.log(f"title: {self.title}")
+        # futil.log(f"description: {self.description}")
+        # futil.log(f"required: {self.required}")
 
         for p in json_obj["properties"]:
             self.properties[p] = {}
             for key in json_obj["properties"][p]:
                 self.properties[p][key] = json_obj["properties"][p][key]
-            futil.log(f"{p}: {self.properties[p]}")
+            # futil.log(f"{p}: {self.properties[p]}")
 
     def validate(self, props: dict):
         futil.log(f"Validating...")
@@ -66,4 +66,4 @@ class DesignParameters:
                 "expression": param.expression,
                 "value": param.value,
             }
-            futil.log(f"{param.name}: {self.parameters[param.name]}")
+            # futil.log(f"{param.name}: {self.parameters[param.name]}")
