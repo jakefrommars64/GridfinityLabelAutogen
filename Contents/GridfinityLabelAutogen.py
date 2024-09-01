@@ -1,4 +1,4 @@
-from commands import GLA_entry
+from .commands import GLA_entry
 
 
 def run(context):
