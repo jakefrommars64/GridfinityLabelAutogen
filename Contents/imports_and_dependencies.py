@@ -15,9 +15,9 @@ from jsonSchema import *
 ```
 """
 
-from .src import commands
+import commands
 from .lib import fusionAddInUtils as futil
-from . import R
+import R
 
 
 def __init__():

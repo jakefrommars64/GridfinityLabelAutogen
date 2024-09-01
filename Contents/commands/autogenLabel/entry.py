@@ -1,10 +1,10 @@
-from ... import design_parameters
+from .. import design_parameters
 import adsk.core
 import adsk.fusion
 import os
-from ....lib import fusionAddInUtils as futil
-from .... import config
-from .... import R
+from ...lib import fusionAddInUtils as futil
+from ... import config
+from ... import R
 
 app = adsk.core.Application.get()
 ui = app.userInterface
@@ -30,7 +30,8 @@ PANEL_ID = "AutogeneratePanel"
 COMMAND_BESIDE_ID = ""
 
 # Resource location for command icons, here we assume a sub folder in this directory named "resources".
-ICON_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), "resources", "")
+ICON_FOLDER = os.path.join(os.path.dirname(
+    os.path.abspath(__file__)), "resources", "")
 
 # Local list of event handlers used to maintain a reference so
 # they are not released and garbage collected.
@@ -59,7 +60,8 @@ def start():
     # Get the panel the button will be created in.
     panel = tab.toolbarPanels.itemById(PANEL_ID)
     if not panel:
-        panel = tab.toolbarPanels.add(PANEL_ID, "Autogenerate", PANEL_BESIDE_ID, False)
+        panel = tab.toolbarPanels.add(
+            PANEL_ID, "Autogenerate", PANEL_BESIDE_ID, False)
 
     # Create the button command control in the UI after the specified existing command.
     control = panel.controls.addCommand(cmd_def, COMMAND_BESIDE_ID, False)
@@ -105,7 +107,8 @@ def get_and_validate_design_parameters():
         return
 
     futil.log(f"Loading label design parameters schema...")
-    dp_schema = design_parameters.JSONSchema(R.LABEL_DOCUMENT_PARAMETERS_SCHEMA)
+    dp_schema = design_parameters.JSONSchema(
+        R.LABEL_DOCUMENT_PARAMETERS_SCHEMA)
     dp_schema.load()
     val_props = dp_schema.validate(design_params.parameters)
 
@@ -125,12 +128,14 @@ def command_created(args: adsk.core.CommandCreatedEventArgs):
     # TODO Define JSON schema and schema loader for commandInputs
 
     # Create a simple text box input.
-    inputs.addTextBoxCommandInput("text_box", "Some Text", "Enter some text.", 1, False)
+    inputs.addTextBoxCommandInput(
+        "text_box", "Some Text", "Enter some text.", 1, False)
 
     # Create a value input field and set the default using 1 unit of the default length unit.
     defaultLengthUnits = app.activeProduct.unitsManager.defaultLengthUnits
     default_value = adsk.core.ValueInput.createByString("1")
-    inputs.addValueInput("value_input", "Some Value", defaultLengthUnits, default_value)
+    inputs.addValueInput("value_input", "Some Value",
+                         defaultLengthUnits, default_value)
 
     # TODO Connect to the events that are needed by this command.
     futil.add_handler(

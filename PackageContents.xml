@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ApplicationPackage SchemaVersion="1.0" ProductType="Application" AutodeskProduct="Fusion360" Name="GridfinityLabelAutogenerator" Description="Gridfinity Label Autogenerator package contents description." AppVersion="1.0.0.0" Author="Jacob Davis" AppNameSpace="com.autodesk.exchange.Fusion360.GridfinityLabelAutogen" HelpFile="./Contents/docs/help.html" OnlineDocumentation="https://jakefrommars64.com/" ProductCode="*" UpgradeCode="">
+
+	<CompanyDetails Name="Jacob Davis" Phone=" " Url="" Email="" />
+
+	<RuntimeRequirements SupportPath="./Contents/docs" OS="win64|mac" Platform="Fusion360" SeriesMin="" />
+
+	<Components>
+		<RuntimeRequirements SupportPath="./Contents/docs" OS="win64|mac" Platform="Fusion360" SeriesMin="" />
+		<ComponentEntry AppName="GridfinityLabelAutogen" Version="1.0.0.0" ModuleName="./Contents/GridfinityLabelAutogen.manifest" AppDescription="Gridfinity Label Autogenerator package contents app description." />
+	</Components>
+
+</ApplicationPackage>
