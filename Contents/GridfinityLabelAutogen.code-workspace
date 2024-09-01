@@ -1,20 +1,8 @@
 {
-  "folders": [
-    {
-      "path": "."
-    }
-  ],
-  "settings": {
-    "python.autoComplete.extraPaths": [
-      "C:/Users/jacob/AppData/Roaming/Autodesk/Autodesk Fusion 360/API/Python/defs",
-      "C:/Users/jacob/AppData/Roaming/Autodesk/Autodesk Fusion 360/API/AddIns/GridfinityLabelAutogen",
-      "C:/Users/jacob/AppData/Roaming/Autodesk/Autodesk Fusion 360/API/AddIns/GridfinityLabelAutogen/lib/jschon/jschon"
-    ],
-    "python.analysis.extraPaths": [
-      "C:/Users/jacob/AppData/Roaming/Autodesk/Autodesk Fusion 360/API/Python/defs",
-      "C:/Users/jacob/AppData/Roaming/Autodesk/Autodesk Fusion 360/API/AddIns/GridfinityLabelAutogen",
-      "C:/Users/jacob/AppData/Roaming/Autodesk/Autodesk Fusion 360/API/AddIns/GridfinityLabelAutogen/lib/jschon/jschon"
-    ],
-    "python.defaultInterpreterPath": "C:/Users/jacob/AppData/Local/Autodesk/webdeploy/production/b738a7f16475c27414ba957f7f0b2ee5b34e4e6d/Python/python.exe"
-  }
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {}
 }

@@ -48,6 +48,3 @@ pip-delete-this-directory.txt
 
 # Sphinx documentation
 docs/_build/
-
-# pytest
-.pytest_cache
