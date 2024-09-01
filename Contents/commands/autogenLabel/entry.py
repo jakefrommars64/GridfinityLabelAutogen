@@ -1,10 +1,10 @@
-from .. import design_parameters
+from ...lib import design_parameters
 import adsk.core
 import adsk.fusion
 import os
 from ...lib import fusionAddInUtils as futil
 from ... import config
-from ... import R
+from ...lib import R
 
 app = adsk.core.Application.get()
 ui = app.userInterface
