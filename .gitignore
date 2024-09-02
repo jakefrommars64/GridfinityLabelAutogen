@@ -4,12 +4,10 @@
 !.vscode/extensions.json
 !.vscode/*.code-snippets
 
-
 # Local History for Visual Studio Code
 .history/
 
 # Environments
-.env
 .venv
 env/
 venv/
@@ -17,7 +15,7 @@ venv/
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
-*$py.class
+*$py.class]
 
 # C extensions
 *.so
@@ -30,8 +28,6 @@ dist/
 downloads/
 eggs/
 .eggs/
-lib/
-lib64/
 parts/
 sdist/
 var/
