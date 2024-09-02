@@ -1,5 +1,19 @@
 {
-	"python.autoComplete.extraPaths":	["C:/Users/jacob/AppData/Roaming/Autodesk/Autodesk Fusion 360/API/Python/defs"],
-	"python.analysis.extraPaths":	["C:/Users/jacob/AppData/Roaming/Autodesk/Autodesk Fusion 360/API/Python/defs"],
-	"python.defaultInterpreterPath":	"C:/Users/jacob/AppData/Local/Autodesk/webdeploy/production/1a197c6e79bef01edef1dc4f317d9f597820e633/Python/python.exe"
+	"python.autoComplete.extraPaths": [
+		"${env:HOME}/AppData/Roaming/Autodesk/Autodesk Fusion 360/API/Python/defs",
+		"${env:HOME}/AppData/Roaming/Autodesk/ApplicationPlugins/GridfinityLabelAutogen.bundle",
+		"${env:HOME}/AppData/Roaming/Autodesk/ApplicationPlugins/GridfinityLabelAutogen.bundle/Contents",
+		"${env:HOME}/AppData/Roaming/Autodesk/ApplicationPlugins/GridfinityLabelAutogen.bundle/Contents/commands",
+		"${env:HOME}/AppData/Roaming/Autodesk/ApplicationPlugins/GridfinityLabelAutogen.bundle/Contents/lib",
+		"${env:HOME}/AppData/Roaming/Autodesk/ApplicationPlugins/GridfinityLabelAutogen.bundle/Contents/res"
+	],
+	"python.analysis.extraPaths": [
+		"${env:HOME}/AppData/Roaming/Autodesk/Autodesk Fusion 360/API/Python/defs",
+		"${env:HOME}/AppData/Roaming/Autodesk/ApplicationPlugins/GridfinityLabelAutogen.bundle",
+		"${env:HOME}/AppData/Roaming/Autodesk/ApplicationPlugins/GridfinityLabelAutogen.bundle/Contents",
+		"${env:HOME}/AppData/Roaming/Autodesk/ApplicationPlugins/GridfinityLabelAutogen.bundle/Contents/commands",
+		"${env:HOME}/AppData/Roaming/Autodesk/ApplicationPlugins/GridfinityLabelAutogen.bundle/Contents/lib",
+		"${env:HOME}/AppData/Roaming/Autodesk/ApplicationPlugins/GridfinityLabelAutogen.bundle/Contents/res"
+	],
+	"python.defaultInterpreterPath": "${env:HOME}/AppData/Local/Autodesk/webdeploy/production/1a197c6e79bef01edef1dc4f317d9f597820e633/Python/python.exe"
 }
