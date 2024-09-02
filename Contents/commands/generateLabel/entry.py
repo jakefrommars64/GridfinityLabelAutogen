@@ -11,9 +11,9 @@ ui = app.userInterface
 
 
 # TODO *** Specify the command identity information. ***
-CMD_ID = f"{config.COMPANY_NAME}_{config.ADDIN_NAME}_autogenLabel"
-CMD_NAME = "Autogenerate Labels"
-CMD_Description = "Autogenerate labels using parameters input by the user."
+CMD_ID = f"{config.COMPANY_NAME}_{config.ADDIN_NAME}_generateLabel"
+CMD_NAME = "Generate Label"
+CMD_Description = "Generate a label using parameters input by the user."
 futil.log(CMD_ID)
 
 # Specify that the command will be promoted to the panel.
@@ -103,14 +103,16 @@ def get_and_validate_design_parameters():
     # if not then display message to open a GLA document.
     # Otherwise Continue and valiudate design parameters.
     if not design_params.parameters.get("gla_id"):
+        futil.log("Currently open document is not a GLA document.")
         ui.messageBox("Please open an official GLA Fusion 360 Document.")
-        return
+        return 0
 
     futil.log(f"Loading label design parameters schema...")
     dp_schema = design_parameters.JSONSchema(
         R.LABEL_DOCUMENT_PARAMETERS_SCHEMA)
     dp_schema.load()
     val_props = dp_schema.validate(design_params.parameters)
+    return design_params
 
 
 # Function that is called when a user clicks the corresponding button in the UI.
@@ -119,7 +121,10 @@ def command_created(args: adsk.core.CommandCreatedEventArgs):
     # General logging for debug.
     futil.log(f"{CMD_NAME} Command Created Event")
 
-    get_and_validate_design_parameters()
+    global design_params
+    design_params = get_and_validate_design_parameters()
+    if design_params == 0:
+        return
 
     # https://help.autodesk.com/view/fusion360/ENU/?contextId=CommandInputs
     inputs = args.command.commandInputs
@@ -130,12 +135,8 @@ def command_created(args: adsk.core.CommandCreatedEventArgs):
     # Create a simple text box input.
     inputs.addTextBoxCommandInput(
         "text_box", "Some Text", "Enter some text.", 1, False)
-
-    # Create a value input field and set the default using 1 unit of the default length unit.
-    defaultLengthUnits = app.activeProduct.unitsManager.defaultLengthUnits
-    default_value = adsk.core.ValueInput.createByString("1")
-    inputs.addValueInput("value_input", "Some Value",
-                         defaultLengthUnits, default_value)
+    inputs.addIntegerSpinnerCommandInput(
+        id="bin_span_spinner", name="Bin Span", initialValue=1, min=1, max=100, spinStep=1)
 
     # TODO Connect to the events that are needed by this command.
     futil.add_handler(
@@ -168,13 +169,16 @@ def command_execute(args: adsk.core.CommandEventArgs):
     # Get a reference to your command's inputs.
     inputs = args.command.commandInputs
     text_box: adsk.core.TextBoxCommandInput = inputs.itemById("text_box")
-    value_input: adsk.core.ValueCommandInput = inputs.itemById("value_input")
+    bin_span_spinner: adsk.core.IntegerSpinnerCommandInput = inputs.itemById(
+        "bin_span_spinner")
 
-    # Do something interesting
+    # Update and save the variable bin_span to the new value.
     text = text_box.text
-    expression = value_input.expression
-    msg = f"Your text: {text}<br>Your value: {expression}"
-    ui.messageBox(msg)
+    new_bin_span_expression = bin_span_spinner.value
+    design_params.preview_parameter_expression(
+        "bin_span", str(new_bin_span_expression))
+    futil.log(
+        f'Execute changed Design Parameter \'bin_span\' to {new_bin_span_expression}')
 
 
 # This event handler is called when the command needs to compute a new preview in the graphics window.
@@ -182,6 +186,15 @@ def command_preview(args: adsk.core.CommandEventArgs):
     # General logging for debug.
     futil.log(f"{CMD_NAME} Command Preview Event")
     inputs = args.command.commandInputs
+    bin_span_spinner: adsk.core.IntegerSpinnerCommandInput = inputs.itemById(
+        "bin_span_spinner")
+
+    # Update the preview to show the label with the new bin_span value.
+    new_bin_span_expression = bin_span_spinner.value
+    design_params.preview_parameter_expression(
+        "bin_span", str(new_bin_span_expression))
+    futil.log(
+        f'Preview changed Design Parameter \'bin_span\' to {new_bin_span_expression}')
 
 
 # This event handler is called when the user changes anything in the command dialog
@@ -205,8 +218,8 @@ def command_validate_input(args: adsk.core.ValidateInputsEventArgs):
     inputs = args.inputs
 
     # Verify the validity of the input values. This controls if the OK button is enabled or not.
-    valueInput = inputs.itemById("value_input")
-    if valueInput.value >= 0:
+    binSpanSpinner = inputs.itemById("bin_span_spinner")
+    if binSpanSpinner.value >= 1:
         args.areInputsValid = True
     else:
         args.areInputsValid = False
